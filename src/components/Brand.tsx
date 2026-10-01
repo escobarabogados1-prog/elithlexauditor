@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const logoUrl = logo.url;
 
 export function SiteHeader() {
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, isAdmin } = useAuth();
   const navigate = useNavigate();
   return (
     <header className="no-print sticky top-0 z-40 border-b border-border/60 bg-ink-gradient text-ink-foreground">
