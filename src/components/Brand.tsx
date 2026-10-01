@@ -19,8 +19,11 @@ export function SiteHeader() {
         <nav className="flex items-center gap-2 text-sm">
           {user ? (
             <>
-              <Link to="/dashboard" className="px-3 py-2 hover:text-gold">Mis auditorías</Link>
+              <Link to="/dashboard" className="px-3 py-2 hover:text-gold">Auditorías</Link>
+              <Link to="/historial" className="px-3 py-2 hover:text-gold">Historial</Link>
+              <Link to="/acciones" className="px-3 py-2 hover:text-gold">Plan de acción</Link>
               {isStaff && <Link to="/admin" className="px-3 py-2 hover:text-gold">Administración</Link>}
+              {isAdmin && <Link to="/normas" className="px-3 py-2 hover:text-gold">Normas</Link>}
               <Button
                 size="sm"
                 variant="outline"
