@@ -34,10 +34,10 @@ function AuthPage() {
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email: f.email, password: f.password });
       setBusy(false);
-      if (error) return toast.error("Correo o contraseña incorrectos");
+      if (error) { toast.error("Correo o contraseña incorrectos"); return; }
       navigate({ to: "/dashboard" });
     } else {
-      if (f.password.length < 8) { setBusy(false); return toast.error("La contraseña debe tener al menos 8 caracteres"); }
+      if (f.password.length < 8) { setBusy(false); { toast.error("La contraseña debe tener al menos 8 caracteres"); return; } }
       const { error } = await supabase.auth.signUp({
         email: f.email,
         password: f.password,
@@ -47,7 +47,7 @@ function AuthPage() {
         },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       setSent(true);
     }
   };

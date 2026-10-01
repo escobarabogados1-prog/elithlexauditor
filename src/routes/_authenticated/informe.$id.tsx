@@ -37,9 +37,9 @@ function Informe() {
   );
 
   const addAction = async () => {
-    if (!na.action.trim()) return toast.error("Describa la acción");
+    if (!na.action.trim()) { toast.error("Describa la acción"); return; }
     const { error } = await supabase.from("action_items").insert({ assessment_id: id, action: na.action.trim().slice(0, 500), responsible: na.responsible || null, due_date: na.due_date || null });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setNa({ action: "", responsible: "", due_date: "" });
     qc.invalidateQueries({ queryKey: ["actions", id] });
   };

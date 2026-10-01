@@ -113,13 +113,13 @@ function ContactSection() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const r = contactSchema.safeParse(form);
-    if (!r.success) return toast.error(r.error.issues[0].message);
+    if (!r.success) { toast.error(r.error.issues[0]?.message ?? "Revise los datos"); return; }
     setSending(true);
     const { error } = await supabase.from("contact_messages").insert({
       name: r.data.name, email: r.data.email, company: r.data.company || null, phone: r.data.phone || null, message: r.data.message,
     });
     setSending(false);
-    if (error) return toast.error("No se pudo enviar. Intente por WhatsApp.");
+    if (error) { toast.error("No se pudo enviar. Intente por WhatsApp."); return; }
     toast.success("Mensaje recibido. Le contactaremos pronto.");
     setForm({ name: "", email: "", company: "", phone: "", message: "" });
   };

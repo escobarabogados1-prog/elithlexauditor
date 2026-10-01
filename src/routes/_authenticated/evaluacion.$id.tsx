@@ -33,7 +33,7 @@ function Evaluacion() {
       { assessment_id: id, requirement_id, ...patch, updated_at: new Date().toISOString() },
       { onConflict: "assessment_id,requirement_id" },
     );
-    if (error) return toast.error("No se pudo guardar");
+    if (error) { toast.error("No se pudo guardar"); return; }
     qc.invalidateQueries({ queryKey: ["assessment", id] });
   };
 

@@ -35,9 +35,9 @@ function Dashboard() {
   });
 
   const start = async () => {
-    if (!std || !user) return toast.error("Seleccione una norma");
+    if (!std || !user) { toast.error("Seleccione una norma"); return; }
     const { data, error } = await supabase.from("assessments").insert({ standard_id: std, user_id: user.id }).select().single();
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     navigate({ to: "/evaluacion/$id", params: { id: data.id } });
   };
 
