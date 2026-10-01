@@ -48,6 +48,21 @@ function Informe() {
     qc.invalidateQueries({ queryKey: ["actions", id] });
   };
   const today = new Date().toISOString().slice(0, 10);
+  const genActions = async () => {
+    const have = new Set((actions.data ?? []).map((x) => x.requirement_id));
+    const due = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
+    const rows = gaps.filter(({ r }) => !have.has(r.id)).map(({ r, a }) => ({
+      assessment_id: id, requirement_id: r.id, due_date: due,
+      action: `${a.status === "no_cumple" ? "Implementar" : "Completar"} requisito ${r.code}: ${r.question}`.slice(0, 500),
+    }));
+    if (!rows.length) { toast.info("Todas las brechas ya tienen acción"); return; }
+    const { error } = await supabase.from("action_items").insert(rows);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`${rows.length} acciones creadas`);
+    qc.invalidateQueries({ queryKey: ["actions", id] });
+  };
+  const weakest = [...sc.byChapter].sort((a, b) => a.pct - b.pct).slice(0, 3);
+  const strongest = [...sc.byChapter].sort((a, b) => b.pct - a.pct)[0];
 
   return (
     <div className="space-y-8">
@@ -78,6 +93,18 @@ function Informe() {
           <p className="font-display text-6xl font-semibold text-destructive">{gaps.length}</p>
         </div>
       </div>
+
+      <section className="rounded-md border border-border bg-card p-6">
+        <h2 className="text-2xl font-semibold">Resumen ejecutivo</h2>
+        <p className="mt-2 leading-relaxed">
+          {d.profile?.company_name ?? "La organización"} obtiene un nivel de cumplimiento del <b>{sc.overall}%</b> frente a {d.assessment.standards?.name}, clasificado como <b>{sem.label}</b>.
+          Se evaluaron {sc.answered} de {sc.total} requisitos y se identificaron {gaps.length} brechas
+          ({gaps.filter((g) => g.a.status === "no_cumple").length} incumplimientos y {gaps.filter((g) => g.a.status === "parcial").length} cumplimientos parciales).
+          {strongest && <> El capítulo con mejor desempeño es <b>{strongest.name}</b> ({strongest.pct}%).</>}
+          {weakest.length > 0 && <> Las áreas prioritarias de intervención son: {weakest.map((w) => `${w.name} (${w.pct}%)`).join("; ")}.</>}
+        </p>
+        {d.assessment.auditor_notes && <p className="mt-3 text-sm"><b>Concepto del auditor:</b> {d.assessment.auditor_notes}</p>}
+      </section>
 
       <section className="rounded-md border border-border bg-card p-6">
         <h2 className="text-2xl font-semibold">Cumplimiento por capítulo</h2>
@@ -121,7 +148,10 @@ function Informe() {
       </section>
 
       <section className="rounded-md border border-border bg-card p-6">
-        <h2 className="text-2xl font-semibold">Plan de acción</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-2xl font-semibold">Plan de acción</h2>
+          <Button variant="outline" className="no-print" onClick={genActions}>Generar acciones desde brechas</Button>
+        </div>
         <div className="no-print mt-4 grid gap-2 md:grid-cols-[1fr_200px_160px_auto]">
           <Input placeholder="Acción a realizar" value={na.action} onChange={(e) => setNa({ ...na, action: e.target.value })} />
           <Input placeholder="Responsable" value={na.responsible} onChange={(e) => setNa({ ...na, responsible: e.target.value })} />

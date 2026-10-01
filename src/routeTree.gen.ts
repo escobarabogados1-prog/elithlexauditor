@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAccionesRouteImport } from './routes/_authenticated/acciones'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedHistorialRouteImport } from './routes/_authenticated/historial'
+import { Route as AuthenticatedNormasRouteImport } from './routes/_authenticated/normas'
 import { Route as AuthenticatedEvaluacionIdRouteImport } from './routes/_authenticated/evaluacion.$id'
 import { Route as AuthenticatedInformeIdRouteImport } from './routes/_authenticated/informe.$id'
 
@@ -31,6 +34,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAccionesRoute = AuthenticatedAccionesRouteImport.update({
+  id: '/acciones',
+  path: '/acciones',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -39,6 +47,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHistorialRoute = AuthenticatedHistorialRouteImport.update({
+  id: '/historial',
+  path: '/historial',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNormasRoute = AuthenticatedNormasRouteImport.update({
+  id: '/normas',
+  path: '/normas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedEvaluacionIdRoute =
@@ -56,16 +74,22 @@ const AuthenticatedInformeIdRoute = AuthenticatedInformeIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/acciones': typeof AuthenticatedAccionesRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/historial': typeof AuthenticatedHistorialRoute
+  '/normas': typeof AuthenticatedNormasRoute
   '/evaluacion/$id': typeof AuthenticatedEvaluacionIdRoute
   '/informe/$id': typeof AuthenticatedInformeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/acciones': typeof AuthenticatedAccionesRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/historial': typeof AuthenticatedHistorialRoute
+  '/normas': typeof AuthenticatedNormasRoute
   '/evaluacion/$id': typeof AuthenticatedEvaluacionIdRoute
   '/informe/$id': typeof AuthenticatedInformeIdRoute
 }
@@ -74,25 +98,47 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/acciones': typeof AuthenticatedAccionesRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/historial': typeof AuthenticatedHistorialRoute
+  '/_authenticated/normas': typeof AuthenticatedNormasRoute
   '/_authenticated/evaluacion/$id': typeof AuthenticatedEvaluacionIdRoute
   '/_authenticated/informe/$id': typeof AuthenticatedInformeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/admin' | '/dashboard' | '/evaluacion/$id' | '/informe/$id'
+    | '/'
+    | '/auth'
+    | '/acciones'
+    | '/admin'
+    | '/dashboard'
+    | '/historial'
+    | '/normas'
+    | '/evaluacion/$id'
+    | '/informe/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/auth' | '/admin' | '/dashboard' | '/evaluacion/$id' | '/informe/$id'
+    | '/'
+    | '/auth'
+    | '/acciones'
+    | '/admin'
+    | '/dashboard'
+    | '/historial'
+    | '/normas'
+    | '/evaluacion/$id'
+    | '/informe/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/acciones'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/historial'
+    | '/_authenticated/normas'
     | '/_authenticated/evaluacion/$id'
     | '/_authenticated/informe/$id'
   fileRoutesById: FileRoutesById
@@ -126,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/acciones': {
+      id: '/_authenticated/acciones'
+      path: '/acciones'
+      fullPath: '/acciones'
+      preLoaderRoute: typeof AuthenticatedAccionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -138,6 +191,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/historial': {
+      id: '/_authenticated/historial'
+      path: '/historial'
+      fullPath: '/historial'
+      preLoaderRoute: typeof AuthenticatedHistorialRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/normas': {
+      id: '/_authenticated/normas'
+      path: '/normas'
+      fullPath: '/normas'
+      preLoaderRoute: typeof AuthenticatedNormasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/evaluacion/$id': {
@@ -158,15 +225,21 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccionesRoute: typeof AuthenticatedAccionesRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHistorialRoute: typeof AuthenticatedHistorialRoute
+  AuthenticatedNormasRoute: typeof AuthenticatedNormasRoute
   AuthenticatedEvaluacionIdRoute: typeof AuthenticatedEvaluacionIdRoute
   AuthenticatedInformeIdRoute: typeof AuthenticatedInformeIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccionesRoute: AuthenticatedAccionesRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHistorialRoute: AuthenticatedHistorialRoute,
+  AuthenticatedNormasRoute: AuthenticatedNormasRoute,
   AuthenticatedEvaluacionIdRoute: AuthenticatedEvaluacionIdRoute,
   AuthenticatedInformeIdRoute: AuthenticatedInformeIdRoute,
 }
