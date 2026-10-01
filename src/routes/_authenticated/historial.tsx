@@ -26,7 +26,7 @@ function Historial() {
       </div>
       {groups.size === 0 && <p className="text-muted-foreground">Aún no hay auditorías.</p>}
       {[...groups.values()].map((g) => {
-        const first = g[0], last = g[g.length - 1];
+        const first = g[0]!, last = g[g.length - 1]!;
         const diff = last.scores.overall - first.scores.overall;
         const data = g.map((r) => ({ fecha: new Date(r.a.created_at).toLocaleDateString("es-CO"), pct: r.scores.overall }));
         return (
